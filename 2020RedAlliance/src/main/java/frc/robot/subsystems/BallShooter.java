@@ -18,15 +18,21 @@ import edu.wpi.first.wpilibj.PWMTalonSRX;
 public class BallShooter extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private PWMTalonSRX frontShooterTalon1 = new PWMTalonSRX(6);
-  private PWMTalonSRX frontShooterTalon2 = new PWMTalonSRX(6);
-  private PWMTalonSRX backShooterTalon1 = new PWMTalonSRX(6);
-  private PWMTalonSRX backShooterTalon2 = new PWMTalonSRX(6);
-  private PWMTalonSRX hoodTalon = new PWMTalonSRX(5);
+  private PWMTalonSRX gateWheelRight = new PWMTalonSRX(2);
+  private PWMTalonSRX gateWheelLeft = new PWMTalonSRX(3);
+  private PWMTalonSRX flyWheelLeft = new PWMTalonSRX(4);
+  private PWMTalonSRX flyWheelRight = new PWMTalonSRX(5);
+  private PWMTalonSRX beltTalon = new PWMTalonSRX(6);
 
   public static BallShooter shooter;
 
-  public BallShooter() {}
+  public BallShooter() {
+    gateWheelLeft.setInverted(false);
+    gateWheelRight.setInverted(true);
+    flyWheelLeft.setInverted(false);
+    flyWheelRight.setInverted(true);
+    beltTalon.setInverted(false);
+  }
 
   public static BallShooter getInstance() {
     if (shooter == null) {
@@ -36,25 +42,19 @@ public class BallShooter extends Subsystem {
   }
 
 
-  public void setFrontShooterPow1(double speed) {
-    frontShooterTalon1.set(speed);
+  public void spinGateWheels(double speed) {
+    gateWheelLeft.set(speed);
+    gateWheelRight.set(speed);
   }
 
-  public void setFrontShooterPow2(double speed) {
-    frontShooterTalon2.set(speed);
-  }
-
-  public void setBackShooterPow1(double speed) {
-    backShooterTalon1.set(speed);
-  }
-
-  public void setBackShooterPow2(double speed) {
-    backShooterTalon2.set(speed);
+  public void spinFlyWheels(double speed) {
+    flyWheelLeft.set(speed);
+    flyWheelRight.set(speed);
   }
 
   
-  public void setHoodPow(double speed) {
-    hoodTalon.set(speed);
+  public void spinBelt(double speed) {
+    beltTalon.set(speed);
   }
 
   @Override
@@ -62,24 +62,20 @@ public class BallShooter extends Subsystem {
 
   @Override
   public void periodic() {
-    if (OI.getArcJoy().getRawButton(RobotMap.backInButton)){
-      setHoodPow(0.2);
-      setBackShooterPow1(0.2);
-      setBackShooterPow2(0.2);
-      setFrontShooterPow1(0);
-      setFrontShooterPow2(0);
-    } else if (OI.getArcJoy().getRawButton(RobotMap.backOutButton)){
-      setHoodPow(-0.2);
-      setBackShooterPow1(-0.2);
-      setBackShooterPow2(-0.2);
-      setFrontShooterPow1(0);
-      setFrontShooterPow2(0);
-    } else if (OI.getArcJoy().getRawButton(RobotMap.frontInButton)) {
-      setHoodPow(0);
-      setBackShooterPow1(0);
-      setBackShooterPow2(0);
-      setFrontShooterPow1(0.5);
-      setFrontShooterPow2(0.5);
-    }
+    if (OI.getArcJoy().getRawButton(RobotMap.inButton)){
+      spinGateWheels(-0.2);
+      spinFlyWheels(0);
+      spinBelt(0.2);
+    } else if (OI.getArcJoy().getRawButton(RobotMap.outButton)){
+      spinGateWheels(0);
+      spinFlyWheels(0.2);
+      spinBelt(-0.2);
+    } else {
+      spinGateWheels(0);
+      spinFlyWheels(0);
+      spinBelt(0);
+    
+  }
   }
 }
+

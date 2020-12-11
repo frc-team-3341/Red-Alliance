@@ -28,9 +28,7 @@ public class RobotMap {
 
   public static int armJoystick = 0;
   public static int triggers = 2;
-  public static int frontInButton = 5;
-  //public static int frontOutButton = 6;
-  public static int backInButton = 7;
-  public static int backOutButton = 8;
+  public static int inButton = 5;
+  public static int outButton = 6;
 
 }
