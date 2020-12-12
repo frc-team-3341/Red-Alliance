@@ -18,12 +18,21 @@ import edu.wpi.first.wpilibj.PWMTalonSRX;
 public class BallShooter extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private PWMTalonSRX shooterTalon = new PWMTalonSRX(6);
-  private PWMTalonSRX hoodTalon = new PWMTalonSRX(5);
+  private PWMTalonSRX gateWheelRight = new PWMTalonSRX(2);
+  private PWMTalonSRX gateWheelLeft = new PWMTalonSRX(3);
+  private PWMTalonSRX flyWheelLeft = new PWMTalonSRX(4);
+  private PWMTalonSRX flyWheelRight = new PWMTalonSRX(5);
+  private PWMTalonSRX beltTalon = new PWMTalonSRX(6);
 
   public static BallShooter shooter;
 
-  public BallShooter() {}
+  public BallShooter() {
+    gateWheelLeft.setInverted(false);
+    gateWheelRight.setInverted(true);
+    flyWheelLeft.setInverted(false);
+    flyWheelRight.setInverted(true);
+    beltTalon.setInverted(false);
+  }
 
   public static BallShooter getInstance() {
     if (shooter == null) {
@@ -32,12 +41,20 @@ public class BallShooter extends Subsystem {
     return shooter;
   }
 
-  public void setShooterPow(double speed) {
-    shooterTalon.set(speed);
+
+  public void spinGateWheels(double speed) {
+    gateWheelLeft.set(speed);
+    gateWheelRight.set(speed);
   }
 
-  public void setHoodPow(double speed) {
-    hoodTalon.set(speed);
+  public void spinFlyWheels(double speed) {
+    flyWheelLeft.set(speed);
+    flyWheelRight.set(speed);
+  }
+
+  
+  public void spinBelt(double speed) {
+    beltTalon.set(speed);
   }
 
   @Override
@@ -46,12 +63,19 @@ public class BallShooter extends Subsystem {
   @Override
   public void periodic() {
     if (OI.getArcJoy().getRawButton(RobotMap.inButton)){
-      setHoodPow(0.2);
+      spinGateWheels(-0.2);
+      spinFlyWheels(0);
+      spinBelt(0.2);
     } else if (OI.getArcJoy().getRawButton(RobotMap.outButton)){
-      setHoodPow(-0.2);
+      spinGateWheels(0);
+      spinFlyWheels(0.2);
+      spinBelt(-0.2);
     } else {
-      setHoodPow(0);
-    }
-    setShooterPow(OI.getArcJoy().getRawAxis(RobotMap.triggers));
+      spinGateWheels(0);
+      spinFlyWheels(0);
+      spinBelt(0);
+    
+  }
   }
 }
+
